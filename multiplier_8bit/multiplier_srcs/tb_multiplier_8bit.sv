@@ -44,8 +44,8 @@ module tb_multiplier_8bit;
         forever #5 clk = ~clk;  // Clock period = 10 time units
     end
     
-    // The default simulation time was adjusted to 5000ns to allow time for computations
-    // set_property -name {xsim.simulate.runtime} -value {5000ns} -objects [get_filesets sim_1]
+    // The default simulation time may not be enough to complete the operation
+    // Press Run All (F3) to continue running the simulation
     
     // Test sequence
     initial begin
@@ -61,71 +61,61 @@ module tb_multiplier_8bit;
         $display("%t |   %b   |   %b   | %d | %d | %d", 
                  $time, areset, start, x, y, result);
                  
-        // Test using random numbers with custom time allocations
 
-//        // Reset
-//        #10 areset = 0;
-
-//        // Random test case 1
-//        #10 x = $random % 256; 
-//            y = $random % 256;
-//            start = 1; // Start multiplication
-//        #10 start = 0;
-
-//        // Wait for operation to complete
-//        #((y + 1) * 10); // Wait y + 1 cycles for completion
-//        $display("%t |   %b   |   %b   | %d | %d | %d", 
-//                 $time, areset, start, x, y, result);
-        
-//        // Reset
-//        #10 areset = 0;
-
-//        // Random test case 2
-//        #10 x = $random % 256; 
-//            y = $random % 256;
-//            start = 1; // Start multiplication
-//        #10 start = 0;
-
-//        // Wait for operation to complete
-//        #((y + 1) * 10); // Wait y + 1 cycles for completion
-//        $display("%t |   %b   |   %b   | %d | %d | %d", 
-//                 $time, areset, start, x, y, result);
-
-//        // Finish
-//        #20 $finish;
-
-        // Test 1: Multiply 10 * 4
-        areset = 0; start = 0; x = 8'd10; y = 8'd4; #10;
-        areset = 1; start = 1; #10;  // Assert start
-        start = 0; #100;  // Allow time for operation to complete
-        $display("%t |   %b   |   %b   | %d | %d | %d", 
-                 $time, areset, start, x, y, result);
-
-        // Test 2: Multiply 7 * 8
-        areset = 0; start = 0; x = 8'd7; y = 8'd8; #10;
+        // Random test case 1
+        areset = 0; start = 0; 
+        #10 x = $random % 256; 
+            y = $random % 256;
         areset = 1; start = 1; #10;
-        start = 0; #100;
+        start = 0;
+
+        // Wait for operation to complete
+        #((y + 1) * 10); // Wait y + 1 cycles for completion
         $display("%t |   %b   |   %b   | %d | %d | %d", 
                  $time, areset, start, x, y, result);
-                 
+        
         // Reset
         #10 areset = 0;
 
-        // Test 3: Multiply 15 * 15
-        areset = 0; start = 0; x = 8'd15; y = 8'd15; #10;
+        // Random test case 2
+        areset = 0; start = 0;
+        #10 x = $random % 256; 
+            y = $random % 256;
         areset = 1; start = 1; #10;
-        start = 0; #1000;
+        start = 0;
+
+        // Wait for operation to complete
+        #((y + 1) * 10); // Wait y + 1 cycles for completion
         $display("%t |   %b   |   %b   | %d | %d | %d", 
                  $time, areset, start, x, y, result);
                  
-        // Test 4: Multiply 30 * 30
-        areset = 0; start = 0; x = 8'd30; y = 8'd30; #10;
+        // Random test case 3
+        areset = 0; start = 0; 
+        #10 x = $random % 256; 
+            y = $random % 256;
         areset = 1; start = 1; #10;
-        start = 0; #2000;
+        start = 0;
+
+        // Wait for operation to complete
+        #((y + 1) * 10); // Wait y + 1 cycles for completion
         $display("%t |   %b   |   %b   | %d | %d | %d", 
                  $time, areset, start, x, y, result);
+                 
+        // Test case 4: maximum inputs
+        areset = 0; start = 0; 
+        #10 x = 8'b1111_1111; 
+            y = 8'b1111_1111;
+        areset = 1; start = 1; #10;
+        start = 0;
 
-        $finish;
+        // Wait for operation to complete
+        #((y + 1) * 10); // Wait y + 1 cycles for completion
+        $display("%t |   %b   |   %b   | %d | %d | %d", 
+                 $time, areset, start, x, y, result);
+        
+        // Finish
+        #20 $finish;
+
     end
 
 endmodule
